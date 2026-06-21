@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسک‌پلاس | TaskPlus - مدیریت هوشمند وظایف</title>
+  <meta name="description" content="تسک‌پلاس یک اپلیکیشن هوشمند مدیریت وظایف و بهره‌وری برای افراد، گروه‌ها و سازمان‌هاست. با اولویت‌بندی عددی، دستیار هوش مصنوعی و همکاری تیمی یکپارچه." />
+  <meta property="og:title" content="تسک‌پلاس | TaskPlus - مدیریت هوشمند وظایف" />
+  <meta property="og:description" content="اپلیکیشنی که کارهایت را اولویت‌بندی می‌کند، تیمت را هماهنگ می‌کند و با هوش مصنوعی بهره‌وری‌ات را چند برابر می‌کند." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fa_IR" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    /* ===== متغیرهای CSS ===== */
+    :root {
+      --primary: #0d9488;
+      --primary-dark: #0f766e;
+      --primary-light: #14b8a6;
+      --secondary: #06b6d4;
+      --secondary-dark: #0891b2;
+      --accent: #f59e0b;
+      --accent-dark: #d97706;
+      --gradient: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%);
+      --gradient-reverse: linear-gradient(135deg, #06b6d4 0%, #0d9488 100%);
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-card: rgba(255,255,255,0.85);
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: rgba(0,0,0,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.10);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+      --shadow-primary: 0 8px 32px rgba(13,148,136,0.35);
+      --glass-bg: rgba(255,255,255,0.75);
+      --glass-border: rgba(255,255,255,0.6);
+      --nav-bg: rgba(255,255,255,0.9);
+      --nav-border: rgba(0,0,0,0.07);
+    }
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --bg-card: rgba(30,41,59,0.85);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255,255,255,0.07);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+      --glass-bg: rgba(30,41,59,0.75);
+      --glass-border: rgba(255,255,255,0.08);
+      --nav-bg: rgba(15,23,42,0.92);
+      --nav-border: rgba(255,255,255,0.06);
+    }
+
+    /* ===== ریست و پایه ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      direction: rtl;
+      text-align: right;
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+      line-height: 1.7;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { max-width: 100%; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ===== پریلودر ===== */
+    #preloader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--gradient);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2rem;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #preloader.hidden { opacity: 0; visibility: hidden; }
+    .preloader-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      animation: preloaderPulse 1.2s ease-in-out infinite alternate;
+    }
+    .preloader-logo .logo-icon {
+      width: 64px; height: 64px; background: rgba(255,255,255,0.2);
+      border-radius: 18px; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: #fff; border: 2px solid rgba(255,255,255,0.4);
+      backdrop-filter: blur(10px);
+    }
+    .preloader-logo .logo-text { color: #fff; }
+    .preloader-logo .logo-text .fa { font-size: 2rem; font-weight: 900; }
+    .preloader-logo .logo-text .en { font-size: 0.9rem; opacity: 0.85; display: block; }
+    .preloader-progress-wrap { width: 240px; }
+    .preloader-bar-bg {
+      height: 6px; background: rgba(255,255,255,0.25);
+      border-radius: 10px; overflow: hidden;
+    }
+    .preloader-bar {
+      height: 100%; background: #fff; border-radius: 10px;
+      width: 0%; transition: width 0.05s linear;
+    }
+    .preloader-pct { text-align: center; color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-top: 0.5rem; }
+    @keyframes preloaderPulse {
+      from { transform: scale(1); } to { transform: scale(1.04); }
+    }
+
+    /* ===== ناوبری ===== */
+    #navbar {
+      position: fixed; top: 0; right: 0; left: 0; z-index: 1000;
+      padding: 1.25rem 0;
+      transition: all 0.4s ease;
+      background: transparent;
+    }
+    #navbar.scrolled {
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--nav-border);
+      padding: 0.8rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-container {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 800; font-size: 1.25rem;
+      color: var(--text-primary); cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-logo .logo-icon-nav {
+      width: 40px; height: 40px;
+      background: var(--gradient);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.1rem;
+      box-shadow: var(--shadow-primary);
+    }
+    .nav-logo .logo-fa { color: var(--text-primary); }
+    .nav-logo .logo-en { color: var(--primary); font-size: 0.8rem; font-weight: 600; }
+    #navbar.hero-mode .nav-logo .logo-fa,
+    #navbar.hero-mode .nav-links a,
+    #navbar.hero-mode .nav-menu-btn { color: #fff; }
+
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; flex: 1; justify-content: center; }
+    .nav-links a {
+      color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;
+      padding: 0.5rem 0.75rem; border-radius: 8px;
+      transition: all 0.25s ease; white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--primary); background: rgba(13,148,136,0.08); }
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+    /* دکمه تاریک/روشن */
+    .theme-toggle {
+      width: 48px; height: 26px;
+      background: var(--bg-tertiary);
+      border-radius: 13px; position: relative; cursor: pointer;
+      border: 1.5px solid var(--border-color);
+      transition: background 0.3s ease;
+    }
+    .theme-toggle-thumb {
+      position: absolute; top: 2px; right: 2px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--gradient); transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: #fff;
+    }
+    [data-theme="dark"] .theme-toggle-thumb { right: calc(100% - 22px); }
+
+    /* دکمه شروع رایگان */
+    .btn-primary {
+      background: var(--gradient); color: #fff !important;
+      padding: 0.6rem 1.25rem; border-radius: 10px;
+      font-weight: 700; font-size: 0.9rem; cursor: pointer;
+      border: none; outline: none; white-space: nowrap;
+      box-shadow: var(--shadow-primary);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative; overflow: hidden;
+      animation: glowPulse 2.5s ease-in-out infinite;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(13,148,136,0.5); }
+    .btn-primary::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: translateX(-100%); transition: transform 0.5s ease;
+    }
+    .btn-primary:hover::after { transform: translateX(100%); }
+    @keyframes glowPulse {
+      0%,100% { box-shadow: 0 8px 32px rgba(13,148,136,0.35); }
+      50% { box-shadow: 0 8px 48px rgba(13,148,136,0.6); }
+    }
+
+    .btn-outline {
+      background: transparent; color: var(--text-primary);
+      padding: 0.6rem 1.25rem; border-radius: 10px;
+      font-weight: 600; font-size: 0.9rem; cursor: pointer;
+      border: 2px solid var(--border-color);
+      transition: all 0.25s ease; white-space: nowrap;
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* همبرگری */
+    .nav-menu-btn {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 0.5rem;
+      background: none; border: none; color: var(--text-primary);
+    }
+    .nav-menu-btn span {
+      display: block; width: 22px; height: 2px;
+      background: currentColor; border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .nav-menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-menu-btn.open span:nth-child(2) { opacity: 0; }
+    .nav-menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* منوی موبایل */
+    .mobile-menu {
+      display: none; position: fixed; top: 70px; right: 0; left: 0;
+      background: var(--nav-bg); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--nav-border);
+      padding: 1rem 1.5rem; z-index: 999;
+      flex-direction: column; gap: 0.25rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { display: block; color: var(--text-primary); padding: 0.75rem 0; border-bottom: 1px solid var(--border-color); font-weight: 500; }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ===== هیرو ===== */
+    #hero {
+      min-height: 100vh; position: relative; overflow: hidden;
+      display: flex; align-items: center;
+      background: var(--bg-primary);
+      padding-top: 80px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: var(--bg-primary);
+      overflow: hidden;
+    }
+    .hero-gradient-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.18;
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+    .hero-gradient-orb:nth-child(1) {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #0d9488, transparent);
+      top: -200px; left: -200px;
+    }
+    .hero-gradient-orb:nth-child(2) {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #06b6d4, transparent);
+      bottom: -150px; right: -150px;
+      animation-delay: -4s;
+    }
+    .hero-gradient-orb:nth-child(3) {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #f59e0b, transparent);
+      top: 50%; right: 50%;
+      animation-delay: -2s; opacity: 0.08;
+    }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(30px,-30px) scale(1.05); }
+      66% { transform: translate(-20px,20px) scale(0.95); }
+    }
+
+    /* ذرات */
+    #particles-canvas {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    }
+
+    .hero-container {
+      max-width: 1280px; margin: 0 auto;
+      padding: 3rem 1.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+      position: relative; z-index: 2;
+      width: 100%;
+    }
+
+    /* محتوای هیرو */
+    .hero-content { order: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(13,148,136,0.1); color: var(--primary);
+      border: 1.5px solid rgba(13,148,136,0.25);
+      border-radius: 50px; padding: 0.4rem 1rem;
+      font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+    [data-theme="dark"] .hero-badge { background: rgba(13,148,136,0.15); }
+    @keyframes badgePulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(13,148,136,0.2); }
+      50% { box-shadow: 0 0 0 8px rgba(13,148,136,0); }
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 900; line-height: 1.25;
+      color: var(--text-primary); margin-bottom: 1.25rem;
+    }
+    .hero-title span {
+      background: var(--gradient); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 1.05rem; color: var(--text-secondary);
+      line-height: 1.8; margin-bottom: 1.5rem;
+    }
+    .typewriter-wrap {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 2rem;
+      color: var(--text-primary);
+    }
+    .typewriter-label { color: var(--text-muted); font-weight: 400; margin-left: 0.5rem; }
+    .typewriter-text {
+      color: var(--primary);
+      border-left: 3px solid var(--primary);
+      padding-left: 0.4rem;
+      min-width: 2ch; display: inline-block;
+    }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; align-items: center; }
+    .hero-btn-primary {
+      background: var(--gradient); color: #fff !important;
+      padding: 0.875rem 2rem; border-radius: 14px;
+      font-weight: 800; font-size: 1rem; cursor: pointer;
+      border: none; display: inline-flex; align-items: center; gap: 0.5rem;
+      box-shadow: var(--shadow-primary);
+      animation: glowPulse 2.5s ease-in-out infinite;
+      transition: transform 0.25s ease;
+      position: relative; overflow: hidden;
+    }
+    .hero-btn-primary:hover { transform: translateY(-3px); }
+    .hero-btn-primary::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%); transition: transform 0.6s ease;
+    }
+    .hero-btn-primary:hover::after { transform: translateX(100%); }
+    .hero-btn-outline {
+      background: transparent; color: var(--text-primary);
+      padding: 0.875rem 1.75rem; border-radius: 14px;
+      font-weight: 700; font-size: 1rem; cursor: pointer;
+      border: 2px solid var(--border-color);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: all 0.25s ease;
+    }
+    .hero-btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+
+    .hero-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.85rem; color: var(--text-secondary);
+    }
+    .hero-stat-icon { color: var(--primary); font-size: 1rem; }
+
+    /* موک‌آپ موبایل */
+    .hero-mockup { order: 2; display: flex; justify-content: center; align-items: center; }
+    .mockup-wrapper {
+      position: relative;
+      animation: floatMockup 4s ease-in-out infinite;
+    }
+    @keyframes floatMockup {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+    }
+    .mockup-glow {
+      position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+      width: 220px; height: 40px;
+      background: radial-gradient(ellipse, rgba(13,148,136,0.5), transparent);
+      filter: blur(15px);
+    }
+    .phone-frame {
+      width: 280px; background: var(--bg-card);
+      border-radius: 36px; padding: 20px 16px;
+      border: 2px solid var(--border-color);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+      backdrop-filter: blur(20px);
+      position: relative; overflow: hidden;
+    }
+    [data-theme="dark"] .phone-frame { box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .phone-frame::before {
+      content: ''; position: absolute; top: 0; right: 50%; transform: translateX(50%);
+      width: 80px; height: 6px; background: var(--border-color);
+      border-radius: 0 0 6px 6px;
+    }
+    .phone-notch { height: 16px; margin-bottom: 14px; }
+    .phone-header {
+      background: var(--gradient); border-radius: 16px; padding: 12px 14px;
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    }
+    .phone-header-title { color: #fff; font-weight: 800; font-size: 0.95rem; }
+    .phone-header-dot { width: 10px; height: 10px; background: #fff; border-radius: 50%; opacity: 0.8; }
+
+    .phone-section-title {
+      font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
+      margin-bottom: 8px; padding: 0 2px;
+    }
+    .task-card {
+      background: var(--bg-secondary); border-radius: 12px;
+      padding: 10px 12px; margin-bottom: 8px;
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease;
+    }
+    .task-card:hover { transform: scale(1.02); }
+    .task-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .priority-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .priority-high { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+    .priority-mid { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+    .priority-low { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+    .task-title-text { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); flex: 1; }
+    .priority-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 20px; color: #fff; }
+    .priority-badge.high { background: #ef4444; }
+    .priority-badge.mid { background: #f59e0b; }
+    .priority-badge.low { background: #22c55e; }
+    .task-progress-bar { height: 5px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden; margin-top: 2px; }
+    .task-progress-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+    .task-progress-label { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
+    .phone-add-btn {
+      background: rgba(13,148,136,0.1); border: 1.5px dashed var(--primary);
+      border-radius: 10px; padding: 8px; text-align: center;
+      font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-top: 6px;
+      cursor: pointer;
+    }
+
+    /* ===== بخش آمار ===== */
+    #stats {
+      background: var(--gradient); padding: 3rem 1.5rem;
+      position: relative; overflow: hidden;
+    }
+    #stats::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .stats-container {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 2rem; position: relative; z-index: 1;
+      text-align: center;
+    }
+    .stat-item { padding: 1rem; }
+    .stat-num {
+      font-size: 2.5rem; font-weight: 900; color: #fff;
+      line-height: 1; margin-bottom: 0.5rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .stat-label { font-size: 0.9rem; color: rgba(255,255,255,0.88); font-weight: 500; }
+
+    /* ===== بخش‌های عمومی ===== */
+    .section { padding: 5rem 1.5rem; }
+    .section-container { max-width: 1280px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
+    .section-badge {
+      display: inline-block; background: rgba(13,148,136,0.1); color: var(--primary);
+      border: 1.5px solid rgba(13,148,136,0.25); border-radius: 50px;
+      padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 700; margin-bottom: 1rem;
+    }
+    [data-theme="dark"] .section-badge { background: rgba(13,148,136,0.15); }
+    .section-title {
+      font-size: clamp(1.8rem,3vw,2.5rem); font-weight: 900;
+      color: var(--text-primary); margin-bottom: 1rem; line-height: 1.3;
+    }
+    .section-subtitle { font-size: 1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.8; }
+
+    /* ===== اسکرول انیمیشن ===== */
+    .reveal {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateX(0); }
+    .reveal-up {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== بخش مقایسه ===== */
+    #compare { background: var(--bg-secondary); }
+    .compare-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    }
+    .compare-card {
+      background: var(--bg-card); border-radius: 20px; padding: 2rem;
+      border: 2px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .compare-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .compare-card.negative { border-color: rgba(239,68,68,0.2); }
+    .compare-card.positive { border-color: rgba(34,197,94,0.2); background: rgba(13,148,136,0.04); }
+    [data-theme="dark"] .compare-card.positive { background: rgba(13,148,136,0.07); }
+    .compare-title {
+      font-size: 1.2rem; font-weight: 800; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .compare-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);
+      font-size: 0.92rem; color: var(--text-secondary);
+    }
+    .compare-item:last-child { border-bottom: none; }
+    .compare-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .compare-icon.bad { color: #ef4444; }
+    .compare-icon.good { color: #22c55e; }
+
+    /* ===== بخش امکانات تب‌بندی ===== */
+    #features { background: var(--bg-primary); }
+    .tabs-header {
+      display: flex; gap: 0.5rem; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 2.5rem;
+    }
+    .tab-btn {
+      padding: 0.65rem 1.5rem; border-radius: 12px; cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif; font-weight: 700; font-size: 0.9rem;
+      border: 2px solid var(--border-color); background: var(--bg-card);
+      color: var(--text-secondary); transition: all 0.3s ease;
+    }
+    .tab-btn.active {
+      background: var(--gradient); color: #fff; border-color: transparent;
+      box-shadow: var(--shadow-primary);
+    }
+    .tab-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.25rem; animation: fadeInTab 0.4s ease; }
+    @keyframes fadeInTab { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .feature-card {
+      background: var(--bg-card); border-radius: 18px; padding: 1.5rem;
+      border: 1.5px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      cursor: default; position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gradient); opacity: 0; transition: opacity 0.3s ease;
+      border-radius: 18px;
+    }
+    .feature-card:hover { transform: translateY(-6px) rotate3d(1,1,0,1deg); box-shadow: var(--shadow-lg); border-color: rgba(13,148,136,0.3); }
+    .feature-card:hover::before { opacity: 0.04; }
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: rgba(13,148,136,0.1); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    [data-theme="dark"] .feature-icon { background: rgba(13,148,136,0.15); }
+    .feature-card:hover .feature-icon { background: var(--gradient); color: #fff; }
+    .feature-name { font-size: 1rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; position: relative; z-index: 1; }
+    .feature-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; position: relative; z-index: 1; }
+
+    /* ===== بخش اولویت‌بندی تعاملی ===== */
+    #priority-demo { background: var(--bg-secondary); }
+    .priority-demo-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+    }
+    .priority-demo-text { }
+    .priority-demo-text p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .priority-legend { display: flex; flex-direction: column; gap: 0.75rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: var(--text-secondary); }
+    .legend-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+    .priority-demo-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .priority-demo-card {
+      background: var(--bg-card); border-radius: 16px; padding: 1.25rem 1.5rem;
+      border: 2px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      transition: all 0.5s ease; cursor: default;
+    }
+    .priority-demo-card:hover { transform: scale(1.02); }
+    .priority-demo-card.rank-1 { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.03); order: 1; }
+    .priority-demo-card.rank-2 { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.03); order: 2; }
+    .priority-demo-card.rank-3 { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.03); order: 3; }
+    .pd-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .pd-priority-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 800; color: #fff; }
+    .pd-title { font-weight: 800; font-size: 0.95rem; color: var(--text-primary); }
+    .pd-bar-bg { height: 8px; background: var(--bg-tertiary); border-radius: 6px; overflow: hidden; }
+    .pd-bar-fill { height: 100%; border-radius: 6px; transition: width 1.5s ease; }
+    .pd-pct { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem; text-align: left; }
+
+    /* ===== نظرات ===== */
+    #reviews { background: var(--bg-primary); }
+    .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .review-card {
+      background: var(--glass-bg); border: 1.5px solid var(--glass-border);
+      border-radius: 20px; padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.35s ease; position: relative;
+    }
+    .review-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .review-card::before {
+      content: '❝'; position: absolute; top: 1rem; left: 1.25rem;
+      font-size: 3rem; color: var(--primary); opacity: 0.1;
+      font-family: serif; line-height: 1;
+    }
+    .review-stars { color: var(--accent); font-size: 1rem; margin-bottom: 1rem; letter-spacing: 2px; }
+    .review-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.25rem; font-style: italic; }
+    .review-author { display: flex; align-items: center; gap: 0.75rem; }
+    .review-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--gradient); display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: #fff; font-weight: 800; flex-shrink: 0;
+    }
+    .review-name { font-weight: 800; font-size: 0.9rem; color: var(--text-primary); }
+    .review-role { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    /* ===== دانلود ===== */
+    #download { background: var(--bg-secondary); }
+    .download-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+    }
+    .download-content { }
+    .download-rating {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 2rem; font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .download-rating .stars { color: var(--accent); font-size: 1.1rem; }
+    .download-buttons { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .download-btn {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: var(--bg-card); border: 2px solid var(--border-color);
+      border-radius: 14px; padding: 0.85rem 1.25rem;
+      cursor: pointer; transition: all 0.3s ease; min-width: 200px;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    .download-btn:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .download-btn .btn-icon { font-size: 1.5rem; width: 36px; text-align: center; flex-shrink: 0; }
+    .download-btn .btn-texts .btn-sub { font-size: 0.7rem; color: var(--text-muted); display: block; }
+    .download-btn .btn-texts .btn-main { font-size: 0.9rem; font-weight: 800; color: var(--text-primary); display: block; }
+
+    .download-mockup { display: flex; justify-content: center; }
+    .download-phone { width: 220px; animation: floatMockup 4s ease-in-out infinite; }
+
+    /* ===== قیمت‌گذاری ===== */
+    #pricing { background: var(--bg-primary); }
+    .countdown-wrap {
+      text-align: center; margin-bottom: 2.5rem;
+      background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.08));
+      border: 2px solid rgba(239,68,68,0.2); border-radius: 16px;
+      padding: 1.25rem 2rem; display: inline-flex;
+      align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .countdown-label { font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
+    .countdown-label .fire { font-size: 1.2rem; }
+    .countdown-timer { display: flex; align-items: center; gap: 0.25rem; }
+    .countdown-unit {
+      background: var(--bg-secondary); border-radius: 10px;
+      padding: 0.4rem 0.6rem; text-align: center; min-width: 52px;
+      border: 1px solid var(--border-color);
+    }
+    .countdown-num { font-size: 1.5rem; font-weight: 900; color: #ef4444; display: block; line-height: 1; }
+    .countdown-sep { font-size: 1.5rem; font-weight: 900; color: #ef4444; }
+    .countdown-unit-label { font-size: 0.62rem; color: var(--text-muted); display: block; margin-top: 2px; }
+
+    .billing-toggle-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .billing-label { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); }
+    .billing-label.active { color: var(--primary); font-weight: 700; }
+    .billing-switch {
+      width: 52px; height: 28px; background: var(--gradient);
+      border-radius: 14px; position: relative; cursor: pointer;
+      border: none;
+    }
+    .billing-switch-thumb {
+      position: absolute; top: 3px; right: 3px; width: 22px; height: 22px;
+      background: #fff; border-radius: 50%;
+      transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .billing-switch.annual .billing-switch-thumb { right: calc(100% - 25px); }
+    .billing-discount {
+      background: var(--accent); color: #fff;
+      font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 20px;
+    }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .pricing-card {
+      background: var(--bg-card); border-radius: 24px; padding: 2rem;
+      border: 2px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      transition: all 0.35s ease; position: relative; overflow: hidden;
+    }
+    .pricing-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+    .pricing-card.popular {
+      border-color: var(--primary); background: rgba(13,148,136,0.04);
+      transform: scale(1.03);
+    }
+    [data-theme="dark"] .pricing-card.popular { background: rgba(13,148,136,0.08); }
+    .pricing-card.popular:hover { transform: scale(1.03) translateY(-8px); }
+    .popular-badge {
+      position: absolute; top: 1.25rem; left: 1.25rem;
+      background: var(--gradient); color: #fff;
+      font-size: 0.72rem; font-weight: 800; padding: 0.3rem 0.75rem;
+      border-radius: 20px; box-shadow: var(--shadow-primary);
+    }
+    .pricing-plan { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .pricing-name { font-size: 1.3rem; font-weight: 900; color: var(--text-primary); margin-bottom: 1.25rem; }
+    .pricing-price { margin-bottom: 1.5rem; }
+    .price-monthly, .price-annual { display: none; }
+    .price-monthly.show, .price-annual.show { display: block; }
+    .price-amount { font-size: 2rem; font-weight: 900; color: var(--text-primary); }
+    .price-period { font-size: 0.85rem; color: var(--text-muted); }
+    .price-original { font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through; }
+    .pricing-features { list-style: none; margin-bottom: 2rem; }
+    .pricing-features li {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.5rem 0; font-size: 0.88rem; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .pricing-features li:last-child { border-bottom: none; }
+    .pricing-features .check { color: #22c55e; font-size: 0.9rem; }
+    .pricing-features .cross { color: #9ca3af; font-size: 0.9rem; }
+    .pricing-btn {
+      width: 100%; padding: 0.875rem; border-radius: 14px;
+      font-family: 'Vazirmatn', sans-serif; font-weight: 800; font-size: 0.95rem;
+      cursor: pointer; border: none; transition: all 0.3s ease;
+    }
+    .pricing-btn.filled {
+      background: var(--gradient); color: #fff;
+      box-shadow: var(--shadow-primary);
+      animation: glowPulse 2.5s ease-in-out infinite;
+    }
+    .pricing-btn.outlined {
+      background: transparent; color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+    .pricing-btn.outlined:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ===== سوالات متداول ===== */
+    #faq { background: var(--bg-secondary); }
+    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+    .faq-item {
+      background: var(--bg-card); border-radius: 16px;
+      border: 1.5px solid var(--border-color);
+      backdrop-filter: blur(10px); overflow: hidden;
+    }
+    .faq-question {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.25rem 1.5rem; cursor: pointer; font-weight: 700; font-size: 0.95rem;
+      color: var(--text-primary); transition: color 0.2s ease;
+    }
+    .faq-question:hover { color: var(--primary); }
+    .faq-icon { width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: rgba(13,148,136,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--primary); transition: transform 0.3s ease; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--gradient); color: #fff; }
+    .faq-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s ease;
+      font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8;
+    }
+    .faq-item.open .faq-answer { max-height: 300px; padding: 0 1.5rem 1.25rem; }
+
+    /* ===== تماس ===== */
+    #contact { background: var(--bg-primary); }
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .contact-info { }
+    .contact-info-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .contact-info-icon {
+      width: 48px; height: 48px; background: rgba(13,148,136,0.1); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: var(--primary); flex-shrink: 0;
+    }
+    [data-theme="dark"] .contact-info-icon { background: rgba(13,148,136,0.15); }
+    .contact-info-text .ci-label { font-size: 0.78rem; color: var(--text-muted); display: block; }
+    .contact-info-text .ci-value { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); display: block; }
+    .social-links { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .social-link {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--bg-secondary); border: 1.5px solid var(--border-color);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--text-secondary);
+      transition: all 0.25s ease; cursor: pointer;
+    }
+    .social-link:hover { background: var(--gradient); color: #fff; border-color: transparent; transform: translateY(-3px); }
+
+    .newsletter-form {
+      background: var(--bg-card); border-radius: 20px; padding: 2rem;
+      border: 1.5px solid var(--border-color); backdrop-filter: blur(10px);
+    }
+    .newsletter-form h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; }
+    .newsletter-form p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-input {
+      width: 100%; padding: 0.875rem 1rem; border-radius: 12px;
+      border: 2px solid var(--border-color); background: var(--bg-primary);
+      color: var(--text-primary); font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.9rem; outline: none; transition: border-color 0.25s ease;
+      direction: rtl;
+    }
+    .form-input:focus { border-color: var(--primary); }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-submit { width: 100%; }
+    .toast {
+      position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #22c55e; color: #fff; padding: 0.85rem 1.75rem;
+      border-radius: 12px; font-weight: 700; font-size: 0.9rem;
+      z-index: 2000; opacity: 0; transition: all 0.4s ease; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ===== فوتر ===== */
+    footer {
+      background: var(--bg-secondary); padding: 4rem 1.5rem 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 2rem; margin-bottom: 3rem;
+    }
+    .footer-brand .footer-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 800; font-size: 1.1rem; margin-bottom: 1rem;
+    }
+    .footer-brand .footer-logo .fi { color: var(--text-primary); }
+    .footer-brand .footer-logo .en { color: var(--primary); font-size: 0.75rem; }
+    .footer-brand p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; }
+    .footer-col h4 { font-size: 0.9rem; font-weight: 800; color: var(--text-primary); margin-bottom: 1rem; }
+    .footer-col ul { display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-col ul li a { font-size: 0.85rem; color: var(--text-muted); transition: color 0.2s ease; }
+    .footer-col ul li a:hover { color: var(--primary); }
+    .footer-bottom {
+      border-top: 1px solid var(--border-color); padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+    .footer-social-links { display: flex; gap: 0.5rem; }
+
+    /* ===== دکمه بالا رفتن ===== */
+    #scrollTop {
+      position: fixed; bottom: 2rem; left: 2rem; z-index: 500;
+      width: 46px; height: 46px; border-radius: 14px;
+      background: var(--gradient); color: #fff;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; box-shadow: var(--shadow-primary);
+      opacity: 0; pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    #scrollTop.visible { opacity: 1; pointer-events: all; }
+    #scrollTop:hover { transform: translateY(-3px); }
+
+    /* ===== ریسپانسیو ===== */
+    @media (max-width: 1024px) {
+      .hero-container { grid-template-columns: 1fr; text-align: center; }
+      .hero-content { order: 2; }
+      .hero-mockup { order: 1; }
+      .hero-cta { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .stats-container { grid-template-columns: repeat(2,1fr); }
+      .compare-grid { grid-template-columns: 1fr; }
+      .priority-demo-wrap { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
+      .download-wrap { grid-template-columns: 1fr; text-align: center; }
+      .download-buttons { justify-content: center; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions .btn-primary { display: none; }
+      .nav-menu-btn { display: flex; }
+      .hero-container { padding: 2rem 1.5rem; }
+      .stats-container { grid-template-columns: repeat(2,1fr); }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .pricing-card.popular { transform: scale(1); }
+      .tab-content.active { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-container { grid-template-columns: 1fr 1fr; }
+      .hero-title { font-size: 1.9rem; }
+      .section-title { font-size: 1.6rem; }
+    }
+
+    /* ===== جلوه ۳D Tilt ===== */
+    .tilt-card { transform-style: preserve-3d; transition: transform 0.15s ease; }
+
+    /* ===== انتخاب ===== */
+    ::selection { background: rgba(13,148,136,0.25); color: var(--text-primary); }
+
+    /* ===== اسکرول‌بار ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+    /* ===== خط جداکننده با گرادیان ===== */
+    .gradient-divider {
+      height: 2px;
+      background: var(--gradient);
+      border-radius: 2px;
+      margin: 0 auto 2rem;
+      width: 60px;
+    }
+
+    /* ===== انیمیشن shine برای دکمه ===== */
+    .shine-effect {
+      position: relative; overflow: hidden;
+    }
+    .shine-effect::before {
+      content: ''; position: absolute;
+      top: -50%; left: -75%;
+      width: 50%; height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-20deg);
+      animation: shineLoop 3s ease-in-out infinite;
+    }
+    @keyframes shineLoop {
+      0% { left: -75%; }
+      100% { left: 125%; }
+    }
+
+    /* ===== نوار آمار برای موبایل در هیرو ===== */
+    .mobile-stats-strip {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== پریلودر ===== -->
+<div id="preloader">
+  <div class="preloader-logo">
+    <div class="logo-icon"><i class="fa-solid fa-check-double"></i></div>
+    <div class="logo-text">
+      <span class="fa" style="font-size:1.6rem; font-weight:900; color:#fff;">تسک‌پلاس</span>
+      <span class="en">TaskPlus</span>
+    </div>
+  </div>
+  <div class="preloader-progress-wrap">
+    <div class="preloader-bar-bg"><div class="preloader-bar" id="preloaderBar"></div></div>
+    <div class="preloader-pct" id="preloaderPct">۰٪</div>
+  </div>
+</div>
+
+<!-- ===== ناوبری ===== -->
+<nav id="navbar" class="hero-mode">
+  <div class="nav-container">
+    <div class="nav-logo" onclick="scrollToSection('hero')">
+      <div class="logo-icon-nav"><i class="fa-solid fa-check-double"></i></div>
+      <span class="logo-fa">تسک‌پلاس</span>
+      <span class="logo-en">| TaskPlus</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features" onclick="scrollToSection('features');return false;">امکانات</a>
+      <a href="#priority-demo" onclick="scrollToSection('priority-demo');return false;">اولویت‌بندی</a>
+      <a href="#pricing" onclick="scrollToSection('pricing');return false;">قیمت‌گذاری</a>
+      <a href="#download" onclick="scrollToSection('download');return false;">دانلود</a>
+      <a href="#contact" onclick="scrollToSection('contact');return false;">تماس</a>
+    </div>
+    <div class="nav-actions">
+      <div class="theme-toggle" onclick="toggleTheme()" title="تغییر حالت">
+        <div class="theme-toggle-thumb" id="themeThumb"><i class="fa-solid fa-sun" id="themeIcon"></i></div>
+      </div>
+      <button class="btn-primary shine-effect" onclick="scrollToSection('pricing')">شروع رایگان</button>
+      <button class="nav-menu-btn" id="navMenuBtn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" onclick="scrollToSection('features');closeMobileMenu();">امکانات</a>
+  <a href="#priority-demo" onclick="scrollToSection('priority-demo');closeMobileMenu();">اولویت‌بندی</a>
+  <a href="#pricing" onclick="scrollToSection('pricing');closeMobileMenu();">قیمت‌گذاری</a>
+  <a href="#download" onclick="scrollToSection('download');closeMobileMenu();">دانلود</a>
+  <a href="#contact" onclick="scrollToSection('contact');closeMobileMenu();">تماس</a>
+  <a href="#pricing" onclick="scrollToSection('pricing');closeMobileMenu();" style="color:var(--primary);font-weight:800;">شروع رایگان</a>
+</div>
+
+<!-- ===== هیرو ===== -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-gradient-orb"></div>
+    <div class="hero-gradient-orb"></div>
+    <div class="hero-gradient-orb"></div>
+  </div>
+  <canvas id="particles-canvas"></canvas>
+  <div class="hero-container">
+    <!-- محتوای متنی -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>🚀</span>
+        <span>نسخه ۲.۰ منتشر شد</span>
+      </div>
+      <h1 class="hero-title">
+        مدیریت هوشمند وظایف<br>
+        با <span>تسک‌پلاس</span>
+      </h1>
+      <p class="hero-subtitle">
+        اپلیکیشنی که کارهایت را اولویت‌بندی می‌کند، تیمت را هماهنگ می‌کند و با هوش مصنوعی بهره‌وری‌ات را چند برابر می‌کند.
+      </p>
+      <div class="typewriter-wrap">
+        <span class="typewriter-label">برای</span>
+        <span class="typewriter-text" id="typewriterEl"></span>
+      </div>
+      <div class="hero-cta">
+        <button class="hero-btn-primary shine-effect" onclick="scrollToSection('pricing')">
+          شروع رایگان
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button class="hero-btn-outline" onclick="scrollToSection('priority-demo')">
+          <i class="fa-solid fa-play-circle"></i>
+          مشاهده دمو
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-icon"><i class="fa-solid fa-star"></i></span>
+          <span>امتیاز ۴.۹ از ۵</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-icon"><i class="fa-solid fa-users"></i></span>
+          <span>+۱,۷۸۲ کاربر فعال</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-icon"><i class="fa-solid fa-lock"></i></span>
+          <span>SSL امن</span>
+        </div>
+      </div>
+    </div>
+    <!-- موک‌آپ موبایل -->
+    <div class="hero-mockup">
+      <div class="mockup-wrapper">
+        <div class="mockup-glow"></div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-header">
+            <span class="phone-header-title">تسک‌پلاس</span>
+            <div style="display:flex;gap:4px;">
+              <div class="phone-header-dot"></div>
+              <div class="phone-header-dot" style="opacity:0.5;"></div>
+              <div class="phone-header-dot" style="opacity:0.3;"></div>
+            </div>
+          </div>
+          <div class="phone-section-title">📋 وظایف امروز</div>
+          <!-- وظیفه ۱ -->
+          <div class="task-card">
+            <div class="task-header">
+              <div class="priority-dot priority-high"></div>
+              <span class="task-title-text">یادگیری وایب‌کدینگ</span>
+              <span class="priority-badge high">اولویت ۷</span>
+            </div>
+            <div class="task-progress-bar">
+              <div class="task-progress-fill" style="width:65%;background:linear-gradient(90deg,#ef4444,#f87171);"></div>
+            </div>
+            <div class="task-progress-label"><span>پیشرفت</span><span>%۶۵</span></div>
+          </div>
+          <!-- وظیفه ۲ -->
+          <div class="task-card">
+            <div class="task-header">
+              <div class="priority-dot priority-mid"></div>
+              <span class="task-title-text">یادگیری انگلیسی</span>
+              <span class="priority-badge mid">اولویت ۵</span>
+            </div>
+            <div class="task-progress-bar">
+              <div class="task-progress-fill" style="width:40%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div>
+            </div>
+            <div class="task-progress-label"><span>پیشرفت</span><span>%۴۰</span></div>
+          </div>
+          <!-- وظیفه ۳ -->
+          <div class="task-card">
+            <div class="task-header">
+              <div class="priority-dot priority-low"></div>
+              <span class="task-title-text">شستن ماشین</span>
+              <span class="priority-badge low">اولویت ۲</span>
+            </div>
+            <div class="task-progress-bar">
+              <div class="task-progress-fill" style="width:20%;background:linear-gradient(90deg,#22c55e,#4ade80);"></div>
+            </div>
+            <div class="task-progress-label"><span>پیشرفت</span><span>%۲۰</span></div>
+          </div>
+          <div class="phone-add-btn">
+            <i class="fa-solid fa-plus"></i> افزودن وظیفه
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== آمار ===== -->
+<section id="stats">
+  <div class="stats-container">
+    <div class="stat-item reveal-up">
+      <div class="stat-num" data-target="1782" data-prefix="+" data-persian="true">+۰</div>
+      <div class="stat-label">کاربر فعال</div>
+    </div>
+    <div class="stat-item reveal-up" style="transition-delay:0.1s;">
+      <div class="stat-num" data-target="48391" data-prefix="+" data-persian="true">+۰</div>
+      <div class="stat-label">وظیفه تکمیل‌شده</div>
+    </div>
+    <div class="stat-item reveal-up" style="transition-delay:0.2s;">
+      <div class="stat-num" data-target="317" data-prefix="+" data-persian="true">+۰</div>
+      <div class="stat-label">تیم فعال</div>
+    </div>
+    <div class="stat-item reveal-up" style="transition-delay:0.3s;">
+      <div class="stat-num" data-target="49" data-prefix="" data-suffix="/۵" data-decimal="true">۰</div>
+      <div class="stat-label">امتیاز کاربران</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== مقایسه ===== -->
+<section id="compare" class="section">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">چرا تسک‌پلاس؟</div>
+      <h2 class="section-title">تفاوت را احساس کن</h2>
+      <div class="gradient-divider"></div>
+      <p class="section-subtitle">تسک‌پلاس روش مدیریت کارهایت را متحول می‌کند</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card negative reveal">
+        <div class="compare-title" style="color:#ef4444;">
+          <span>❌</span> بدون تسک‌پلاس
+        </div>
+        <div class="compare-item"><span class="compare-icon bad"><i class="fa-solid fa-times-circle"></i></span>فراموش کردن کارهای مهم</div>
+        <div class="compare-item"><span class="compare-icon bad"><i class="fa-solid fa-times-circle"></i></span>بی‌نظمی در پروژه‌ها</div>
+        <div class="compare-item"><span class="compare-icon bad"><i class="fa-solid fa-times-circle"></i></span>هماهنگی سخت با تیم</div>
+        <div class="compare-item"><span class="compare-icon bad"><i class="fa-solid fa-times-circle"></i></span>اتلاف وقت روزانه</div>
+        <div class="compare-item"><span class="compare-icon bad"><i class="fa-solid fa-times-circle"></i></span>گم شدن اطلاعات مهم</div>
+      </div>
+      <div class="compare-card positive reveal" style="transition-delay:0.15s;">
+        <div class="compare-title" style="color:#22c55e;">
+          <span>✅</span> با تسک‌پلاس
+        </div>
+        <div class="compare-item"><span class="compare-icon good"><i class="fa-solid fa-check-circle"></i></span>اولویت‌بندی هوشمند خودکار</div>
+        <div class="compare-item"><span class="compare-icon good"><i class="fa-solid fa-check-circle"></i></span>مدیریت کامل پروژه‌ها</div>
+        <div class="compare-item"><span class="compare-icon good"><i class="fa-solid fa-check-circle"></i></span>همکاری تیمی یکپارچه</div>
+        <div class="compare-item"><span class="compare-icon good"><i class="fa-solid fa-check-circle"></i></span>صرفه‌جویی روزانه در وقت</div>
+        <div class="compare-item"><span class="compare-icon good"><i class="fa-solid fa-check-circle"></i></span>همه چیز در یک جا</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== امکانات ===== -->
+<section id="features" class="section">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">امکانات کامل</div>
+      <h2 class="section-title">همه چیز در یک اپلیکیشن</h2>
+      <div class="gradient-divider"></div>
+      <p class="section-subtitle">هر آنچه برای مدیریت کارهایت نیاز داری، اینجاست</p>
+    </div>
+    <div class="tabs-header reveal-up">
+      <button class="tab-btn active" onclick="switchTab('personal',this)"><i class="fa-solid fa-user"></i> برای افراد</button>
+      <button class="tab-btn" onclick="switchTab('team',this)"><i class="fa-solid fa-users"></i> برای گروه‌ها</button>
+      <button class="tab-btn" onclick="switchTab('org',this)"><i class="fa-solid fa-building"></i> برای سازمان‌ها</button>
+    </div>
+
+    <!-- تب افراد -->
+    <div class="tab-content active" id="tab-personal">
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📌</div>
+        <div class="feature-name">اولویت‌بندی هوشمند</div>
+        <div class="feature-desc">به هر وظیفه عدد اولویت ۱ تا ۱۰ بده. تسک‌پلاس کارها رو از مهم‌ترین تا کم‌اهمیت‌ترین مرتب می‌کنه</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-name">دستیار هوش مصنوعی</div>
+        <div class="feature-desc">پیشنهاد تقسیم‌بندی زمان، یادآوری هوشمند و تحلیل عادت‌های کاری با هوش مصنوعی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-name">تقویم هوشمند</div>
+        <div class="feature-desc">نمای روزانه، هفتگی و ماهانه با قابلیت جابجایی آسان وظایف و یکپارچگی کامل</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">⏰</div>
+        <div class="feature-name">یادآور چندگانه</div>
+        <div class="feature-desc">یادآور پیامکی، ایمیلی و اعلان داخل اپ برای هیچ کاری از قلم نیفته</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-name">گزارش بهره‌وری</div>
+        <div class="feature-desc">نمودار روزانه و هفتگی از پیشرفت کارها و تحلیل روند بهره‌وری شخصی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-name">هدف‌گذاری</div>
+        <div class="feature-desc">تعریف اهداف کوتاه و بلندمدت با پیگیری پیشرفت و دریافت پیشنهادهای هوشمند</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🔁</div>
+        <div class="feature-name">وظایف تکراری</div>
+        <div class="feature-desc">تعریف کارهای روزانه، هفتگی و ماهانه به صورت خودکار بدون نیاز به ورود مجدد</div>
+      </div>
+    </div>
+
+    <!-- تب گروه‌ها -->
+    <div class="tab-content" id="tab-team">
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">💬</div>
+        <div class="feature-name">چت تیمی یکپارچه</div>
+        <div class="feature-desc">گفتگو مستقیم درون هر پروژه و وظیفه بدون نیاز به ابزار جانبی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-name">مدیریت پروژه</div>
+        <div class="feature-desc">ایجاد پروژه‌های مشترک با نمای Kanban و Gantt و داشبورد جامع پروژه</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">👤</div>
+        <div class="feature-name">تخصیص وظایف</div>
+        <div class="feature-desc">واگذاری کار به اعضای تیم با ددلاین، اولویت و پیگیری خودکار پیشرفت</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📁</div>
+        <div class="feature-name">اشتراک فایل</div>
+        <div class="feature-desc">آپلود و اشتراک‌گذاری فایل‌ها تا ۵ گیگابایت با دسترسی کنترل‌شده</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🔔</div>
+        <div class="feature-name">اعلان تیمی</div>
+        <div class="feature-desc">اطلاع‌رسانی فوری تغییرات به همه اعضا با تنظیم سطح اهمیت اعلان</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📈</div>
+        <div class="feature-name">داشبورد تیم</div>
+        <div class="feature-desc">نمای کلی از وضعیت همه پروژه‌ها و اعضا در یک صفحه واحد و شهودی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🏆</div>
+        <div class="feature-name">گیمیفیکیشن</div>
+        <div class="feature-desc">امتیازدهی به اعضای فعال، جدول رتبه‌بندی و جوایز هفتگی برای انگیزه‌بخشی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🔗</div>
+        <div class="feature-name">اتصال به ابزارها</div>
+        <div class="feature-desc">یکپارچه‌سازی با Slack، Trello و Google Calendar برای جریان کاری یکپارچه</div>
+      </div>
+    </div>
+
+    <!-- تب سازمان‌ها -->
+    <div class="tab-content" id="tab-org">
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-name">مدیریت دسترسی</div>
+        <div class="feature-desc">تعریف نقش‌ها و سطوح دسترسی برای هر کارمند با کنترل دقیق مجوزها</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-name">گزارش‌گیری سازمانی</div>
+        <div class="feature-desc">گزارش‌های تفصیلی از عملکرد تیم‌ها و دپارتمان‌ها با نمودارهای تحلیلی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🏗️</div>
+        <div class="feature-name">ساختار سازمانی</div>
+        <div class="feature-desc">نمودار چارت سازمانی و مدیریت دپارتمان‌ها با ساختار سلسله‌مراتبی</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-name">هوش مصنوعی سازمانی</div>
+        <div class="feature-desc">تحلیل بهره‌وری، پیش‌بینی تأخیرها و پیشنهاد بهینه‌سازی فرآیندها</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-name">امنیت پیشرفته</div>
+        <div class="feature-desc">رمزگذاری End-to-End، احراز هویت دو مرحله‌ای و لاگ کامل فعالیت‌ها</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">☁️</div>
+        <div class="feature-name">ذخیره‌سازی ابری</div>
+        <div class="feature-desc">فضای نامحدود با پشتیبان‌گیری خودکار و بازیابی سریع داده‌ها</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📑</div>
+        <div class="feature-name">قرارداد SLA</div>
+        <div class="feature-desc">پشتیبانی ۲۴/۷ با تضمین آپتایم ۹۹.۹٪ و پاسخگویی اولویت‌دار</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">🔌</div>
+        <div class="feature-name">API اختصاصی</div>
+        <div class="feature-desc">اتصال به سیستم‌های داخلی سازمان با API کامل و مستندسازی جامع</div>
+      </div>
+      <div class="feature-card tilt-card">
+        <div class="feature-icon">📧</div>
+        <div class="feature-name">پورتال اختصاصی</div>
+        <div class="feature-desc">دامنه و پورتال ورود اختصاصی سازمان با برندینگ سفارشی</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== اولویت‌بندی تعاملی ===== -->
+<section id="priority-demo" class="section">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">🎯 ویژگی کلیدی</div>
+      <h2 class="section-title">اولویت‌بندی کارها به سبک تسک‌پلاس</h2>
+      <div class="gradient-divider"></div>
+    </div>
+    <div class="priority-demo-wrap">
+      <div class="priority-demo-text reveal">
+        <p>به هر کار یک عدد اولویت از <strong style="color:var(--primary);">۱ تا ۱۰</strong> بده. تسک‌پلاس کارهایت را از مهم‌ترین تا کم‌اهمیت‌ترین مرتب می‌کند و مهم‌ترین کار را در بالا نشان می‌دهد.</p>
+        <p>این سیستم ساده اما قدرتمند به تو کمک می‌کند هر روز صبح بدانی دقیقاً باید از کجا شروع کنی.</p>
+        <div class="priority-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.5);"></div>
+            <span><strong style="color:#ef4444;">قرمز (۸-۱۰):</strong> فوری - باید همین الان انجام بشه</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,0.5);"></div>
+            <span><strong style="color:#f59e0b;">زرد (۵-۷):</strong> مهم - نباید نادیده گرفته بشه</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.5);"></div>
+            <span><strong style="color:#22c55e;">سبز (۱-۴):</strong> عادی - می‌شه بعداً هم انجام داد</span>
+          </div>
+        </div>
+      </div>
+      <div class="priority-demo-cards reveal" style="transition-delay:0.2s;" id="priorityCards">
+        <div class="priority-demo-card rank-1">
+          <div class="pd-header">
+            <span class="pd-priority-badge" style="background:#ef4444;">اولویت ۷</span>
+            <span class="pd-title">یادگیری مهارت وایب‌کدینگ</span>
+          </div>
+          <div class="pd-bar-bg">
+            <div class="pd-bar-fill" style="width:70%;background:linear-gradient(90deg,#ef4444,#f87171);" data-width="70"></div>
+          </div>
+          <div class="pd-pct">%۷۰</div>
+        </div>
+        <div class="priority-demo-card rank-2">
+          <div class="pd-header">
+            <span class="pd-priority-badge" style="background:#f59e0b;">اولویت ۵</span>
+            <span class="pd-title">یادگیری زبان انگلیسی</span>
+          </div>
+          <div class="pd-bar-bg">
+            <div class="pd-bar-fill" style="width:50%;background:linear-gradient(90deg,#f59e0b,#fbbf24);" data-width="50"></div>
+          </div>
+          <div class="pd-pct">%۵۰</div>
+        </div>
+        <div class="priority-demo-card rank-3">
+          <div class="pd-header">
+            <span class="pd-priority-badge" style="background:#22c55e;">اولویت ۲</span>
+            <span class="pd-title">شستن ماشین</span>
+          </div>
+          <div class="pd-bar-bg">
+            <div class="pd-bar-fill" style="width:20%;background:linear-gradient(90deg,#22c55e,#4ade80);" data-width="20"></div>
+          </div>
+          <div class="pd-pct">%۲۰</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== نظرات ===== -->
+<section id="reviews" class="section" style="background:var(--bg-secondary);">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">نظرات کاربران</div>
+      <h2 class="section-title">آن‌ها تسک‌پلاس را دوست دارند</h2>
+      <div class="gradient-divider"></div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">«تسک‌پلاس زندگی کاری‌ام را متحول کرد! سیستم اولویت‌بندی عددی فوق‌العاده‌ست. دیگه هیچ کار مهمی رو فراموش نمی‌کنم.»</p>
+        <div class="review-author">
+          <div class="review-avatar">س</div>
+          <div>
+            <div class="review-name">سارا محمدی</div>
+            <div class="review-role">طراح گرافیک، تهران</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal" style="transition-delay:0.15s;">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">«به عنوان مدیر یک تیم ۱۵ نفره، تسک‌پلاس هماهنگی تیمم رو صد برابر کرد. داشبورد تیمی واقعاً بی‌نظیره.»</p>
+        <div class="review-author">
+          <div class="review-avatar">ع</div>
+          <div>
+            <div class="review-name">علی رضایی</div>
+            <div class="review-role">مدیر پروژه، اصفهان</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal" style="transition-delay:0.3s;">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">«هوش مصنوعی تسک‌پلاس هر روز صبح بهم میگه کدوم کار رو اول انجام بدم. انگار یه دستیار شخصی دارم!»</p>
+        <div class="review-author">
+          <div class="review-avatar">م</div>
+          <div>
+            <div class="review-name">مریم کریمی</div>
+            <div class="review-role">کارآفرین، مشهد</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== دانلود ===== -->
+<section id="download" class="section">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">دانلود اپلیکیشن</div>
+      <h2 class="section-title">همین الان دانلود کن</h2>
+      <div class="gradient-divider"></div>
+    </div>
+    <div class="download-wrap">
+      <div class="download-content reveal">
+        <div class="download-rating">
+          <span class="stars">★★★★★</span>
+          <span>امتیاز ۴.۹ با بیش از +۱,۲۰۰ نظر ثبت‌شده</span>
+        </div>
+        <div class="download-buttons">
+          <a href="#" target="_blank" rel="noopener" class="download-btn">
+            <span class="btn-icon" style="color:#555;"><i class="fa-brands fa-apple"></i></span>
+            <span class="btn-texts">
+              <span class="btn-sub">دانلود از</span>
+              <span class="btn-main">App Store</span>
+            </span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="download-btn">
+            <span class="btn-icon" style="color:#3ddc84;"><i class="fa-brands fa-google-play"></i></span>
+            <span class="btn-texts">
+              <span class="btn-sub">دانلود از</span>
+              <span class="btn-main">Google Play</span>
+            </span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="download-btn">
+            <span class="btn-icon">🛒</span>
+            <span class="btn-texts">
+              <span class="btn-sub">دانلود از</span>
+              <span class="btn-main">کافه‌بازار</span>
+            </span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="download-btn">
+            <span class="btn-icon">📱</span>
+            <span class="btn-texts">
+              <span class="btn-sub">دانلود از</span>
+              <span class="btn-main">مایکت</span>
+            </span>
+          </a>
+          <a href="#" target="_blank" rel="noopener" class="download-btn">
+            <span class="btn-icon" style="color:var(--primary);"><i class="fa-solid fa-download"></i></span>
+            <span class="btn-texts">
+              <span class="btn-sub">دانلود</span>
+              <span class="btn-main">فایل APK مستقیم</span>
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="download-mockup reveal" style="transition-delay:0.2s;">
+        <div class="mockup-wrapper">
+          <div class="mockup-glow"></div>
+          <div class="phone-frame download-phone">
+            <div class="phone-notch"></div>
+            <div class="phone-header">
+              <span class="phone-header-title">تسک‌پلاس</span>
+              <div style="display:flex;gap:4px;">
+                <div class="phone-header-dot"></div>
+                <div class="phone-header-dot" style="opacity:0.5;"></div>
+              </div>
+            </div>
+            <div class="phone-section-title">📊 داشبورد امروز</div>
+            <div style="background:rgba(13,148,136,0.08);border-radius:12px;padding:10px;margin-bottom:8px;border:1px solid rgba(13,148,136,0.15);">
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">پیشرفت کلی امروز</div>
+              <div style="font-size:1.5rem;font-weight:900;color:var(--primary);">%۶۸</div>
+              <div class="task-progress-bar" style="height:8px;margin-top:4px;">
+                <div class="task-progress-fill" style="width:68%;background:var(--gradient);"></div>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <div class="priority-dot priority-high"></div>
+                <span class="task-title-text">جلسه با تیم</span>
+                <span class="priority-badge high">۹</span>
+              </div>
+              <div class="task-progress-label"><span>امروز، ساعت ۱۴:۰۰</span></div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <div class="priority-dot priority-mid"></div>
+                <span class="task-title-text">ارسال گزارش هفتگی</span>
+                <span class="priority-badge mid">۶</span>
+              </div>
+              <div class="task-progress-label"><span>تا فردا</span></div>
+            </div>
+            <div class="phone-add-btn">
+              <i class="fa-solid fa-robot"></i> پیشنهاد هوش مصنوعی
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== قیمت‌گذاری ===== -->
+<section id="pricing" class="section" style="background:var(--bg-secondary);">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">قیمت‌گذاری</div>
+      <h2 class="section-title">پلن مناسب خودت را انتخاب کن</h2>
+      <div class="gradient-divider"></div>
+    </div>
+
+    <!-- تایمر -->
+    <div style="text-align:center;margin-bottom:2rem;" class="reveal-up">
+      <div class="countdown-wrap">
+        <div class="countdown-label"><span class="fire">🔥</span> پیشنهاد ویژه راه‌اندازی! تا پایان تخفیف:</div>
+        <div class="countdown-timer">
+          <div class="countdown-unit"><span class="countdown-num" id="cdDays">۴۸</span><span class="countdown-unit-label">روز</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-unit"><span class="countdown-num" id="cdHours">۰۰</span><span class="countdown-unit-label">ساعت</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-unit"><span class="countdown-num" id="cdMins">۰۰</span><span class="countdown-unit-label">دقیقه</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-unit"><span class="countdown-num" id="cdSecs">۰۰</span><span class="countdown-unit-label">ثانیه</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- تاگل ماهانه/سالانه -->
+    <div class="billing-toggle-wrap reveal-up">
+      <span class="billing-label active" id="monthlyLabel">پرداخت ماهانه</span>
+      <button class="billing-switch" id="billingSwitch" onclick="toggleBilling()">
+        <div class="billing-switch-thumb"></div>
+      </button>
+      <span class="billing-label" id="annualLabel">پرداخت سالانه</span>
+      <span class="billing-discount">۲۰٪ تخفیف</span>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- رایگان -->
+      <div class="pricing-card reveal">
+        <div class="pricing-plan">پلن</div>
+        <div class="pricing-name">🆓 رایگان</div>
+        <div class="pricing-price">
+          <div class="price-monthly show" id="free-monthly">
+            <span class="price-amount">۰</span>
+            <span class="price-period"> تومان / ماه</span>
+          </div>
+          <div class="price-annual" id="free-annual">
+            <span class="price-amount">۰</span>
+            <span class="price-period"> تومان / سال</span>
+          </div>
+        </div>
+        <ul class="pricing-features">
+          <li><i class="fa-solid fa-check check"></i>تا ۱۰ وظیفه فعال</li>
+          <li><i class="fa-solid fa-check check"></i>۱ پروژه شخصی</li>
+          <li><i class="fa-solid fa-check check"></i>اولویت‌بندی پایه</li>
+          <li><i class="fa-solid fa-check check"></i>یادآور ساده</li>
+          <li><i class="fa-solid fa-check check"></i>اپلیکیشن موبایل</li>
+          <li><i class="fa-solid fa-times cross"></i>هوش مصنوعی</li>
+          <li><i class="fa-solid fa-times cross"></i>همکاری تیمی</li>
+          <li><i class="fa-solid fa-times cross"></i>گزارش‌گیری</li>
+        </ul>
+        <button class="pricing-btn outlined" onclick="scrollToSection('download')">شروع رایگان</button>
+      </div>
+
+      <!-- حرفه‌ای -->
+      <div class="pricing-card popular reveal" style="transition-delay:0.15s;">
+        <div class="popular-badge">⭐ محبوب‌ترین</div>
+        <div class="pricing-plan">پلن</div>
+        <div class="pricing-name">حرفه‌ای</div>
+        <div class="pricing-price">
+          <div class="price-monthly show" id="pro-monthly">
+            <span class="price-amount">۹۸۰,۰۰۰</span>
+            <span class="price-period"> تومان / ماه</span>
+          </div>
+          <div class="price-annual" id="pro-annual">
+            <span class="price-amount">۷۸۴,۰۰۰</span>
+            <span class="price-period"> تومان / ماه</span>
+            <div><span class="price-original">۹,۸۰۰,۰۰۰ تومان/سال</span> ← <strong style="color:#22c55e;">۷,۸۴۰,۰۰۰ تومان/سال</strong></div>
+          </div>
+        </div>
+        <ul class="pricing-features">
+          <li><i class="fa-solid fa-check check"></i>وظایف نامحدود</li>
+          <li><i class="fa-solid fa-check check"></i>تا ۱۰ پروژه</li>
+          <li><i class="fa-solid fa-check check"></i>اولویت‌بندی هوشمند کامل</li>
+          <li><i class="fa-solid fa-check check"></i>دستیار هوش مصنوعی</li>
+          <li><i class="fa-solid fa-check check"></i>تقویم هوشمند</li>
+          <li><i class="fa-solid fa-check check"></i>همکاری تا ۵ نفر</li>
+          <li><i class="fa-solid fa-check check"></i>گزارش‌گیری پایه</li>
+          <li><i class="fa-solid fa-check check"></i>پشتیبانی ایمیلی</li>
+        </ul>
+        <button class="pricing-btn filled shine-effect">شروع ۱۴ روز رایگان</button>
+      </div>
+
+      <!-- سوپر پرفشنال -->
+      <div class="pricing-card reveal" style="transition-delay:0.3s;">
+        <div class="pricing-plan">پلن</div>
+        <div class="pricing-name">💎 سوپر پرفشنال پلاس</div>
+        <div class="pricing-price">
+          <div class="price-monthly show" id="super-monthly">
+            <span class="price-amount">۱,۹۹۳,۰۰۰</span>
+            <span class="price-period"> تومان / ماه</span>
+          </div>
+          <div class="price-annual" id="super-annual">
+            <span class="price-amount">۱,۵۹۴,۰۰۰</span>
+            <span class="price-period"> تومان / ماه</span>
+            <div><span class="price-original">۲۳,۹۱۶,۰۰۰ تومان/سال</span> ← <strong style="color:#22c55e;">۱۹,۱۳۲,۰۰۰ تومان/سال</strong></div>
+          </div>
+        </div>
+        <ul class="pricing-features">
+          <li><i class="fa-solid fa-check check"></i>همه امکانات حرفه‌ای</li>
+          <li><i class="fa-solid fa-check check"></i>پروژه‌های نامحدود</li>
+          <li><i class="fa-solid fa-check check"></i>اعضای نامحدود</li>
+          <li><i class="fa-solid fa-check check"></i>هوش مصنوعی سازمانی</li>
+          <li><i class="fa-solid fa-check check"></i>گزارش‌گیری پیشرفته</li>
+          <li><i class="fa-solid fa-check check"></i>API اختصاصی</li>
+          <li><i class="fa-solid fa-check check"></i>امنیت پیشرفته</li>
+          <li><i class="fa-solid fa-check check"></i>پشتیبانی ۲۴/۷</li>
+          <li><i class="fa-solid fa-check check"></i>پورتال اختصاصی</li>
+          <li><i class="fa-solid fa-check check"></i>آپتایم ۹۹.۹٪ SLA</li>
+        </ul>
+        <button class="pricing-btn outlined" onclick="scrollToSection('contact')">تماس با فروش</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== سوالات متداول ===== -->
+<section id="faq" class="section">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">سوالات متداول</div>
+      <h2 class="section-title">پاسخ سوالات شما</h2>
+      <div class="gradient-divider"></div>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>آیا می‌توانم بدون کارت بانکی شروع کنم؟</span>
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </div>
+        <div class="faq-answer">بله! پلن رایگان تسک‌پلاس کاملاً بدون نیاز به اطلاعات بانکی در دسترسه و محدودیت زمانی هم نداره. می‌تونی همین الان شروع کنی و بعداً ارتقاء بدی.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>سیستم اولویت‌بندی چطور کار می‌کند؟</span>
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </div>
+        <div class="faq-answer">به هر وظیفه عددی بین ۱ تا ۱۰ اختصاص میدی. تسک‌پلاس کارهایی با عدد بالاتر رو در بالای لیست قرار میده. قرمز (۸-۱۰) فوری، زرد (۵-۷) مهم، سبز (۱-۴) عادیه. این سیستم ساده اما بسیار مؤثر به تو کمک می‌کنه هر روز صبح بدونی از کجا شروع کنی.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>آیا داده‌هایم امن هستند؟</span>
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </div>
+        <div class="faq-answer">بله. تمام داده‌ها با رمزگذاری End-to-End محافظت میشن و سرورها در ایران قرار دارن. همچنین از احراز هویت دو مرحله‌ای پشتیبانی می‌کنیم و پشتیبان‌گیری خودکار روزانه انجام میشه.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>می‌توانم بین پلن‌ها جابجا شوم؟</span>
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </div>
+        <div class="faq-answer">بله، در هر زمان می‌تونی ارتقاء یا کاهش پلن بدی و تفاوت مبلغ به صورت نسبی محاسبه میشه. اطلاعات و داده‌هایت کاملاً حفظ میشن و هیچ چیزی از دست نمیره.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>آیا نسخه آفلاین دارید؟</span>
+          <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+        </div>
+        <div class="faq-answer">بله! تسک‌پلاس به صورت آفلاین هم کار می‌کنه. می‌تونی وظایف رو ببینی، ویرایش کنی و اضافه کنی. با اتصال مجدد به اینترنت همگام‌سازی خودکار انجام میشه.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== تماس ===== -->
+<section id="contact" class="section" style="background:var(--bg-secondary);">
+  <div class="section-container">
+    <div class="section-header reveal-up">
+      <div class="section-badge">تماس با ما</div>
+      <h2 class="section-title">در کنارت هستیم</h2>
+      <div class="gradient-divider"></div>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-info reveal">
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="contact-info-text">
+            <span class="ci-label">ایمیل</span>
+            <span class="ci-value">info@taskplus.ir</span>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-phone"></i></div>
+          <div class="contact-info-text">
+            <span class="ci-label">تلفن پشتیبانی</span>
+            <span class="ci-value">۰۲۱-۱۲۳۴-۵۶۷۸</span>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="contact-info-text">
+            <span class="ci-label">ساعات پشتیبانی</span>
+            <span class="ci-value">شنبه تا پنج‌شنبه، ۹ تا ۱۸</span>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="contact-info-text">
+            <span class="ci-label">آدرس</span>
+            <span class="ci-value">تهران، خیابان ولیعصر</span>
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.75rem;">ما را در شبکه‌های اجتماعی دنبال کن:</div>
+          <div class="social-links">
+            <a href="#" target="_blank" rel="noopener" class="social-link" title="اینستاگرام"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" target="_blank" rel="noopener" class="social-link" title="تلگرام"><i class="fa-brands fa-telegram"></i></a>
+            <a href="#" target="_blank" rel="noopener" class="social-link" title="توییتر"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" target="_blank" rel="noopener" class="social-link" title="لینکدین"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#" target="_blank" rel="noopener" class="social-link" title="یوتیوب"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="newsletter-form reveal" style="transition-delay:0.2s;">
+        <h3>عضویت در خبرنامه</h3>
+        <p>اخبار، بروزرسانی‌ها و پیشنهادات ویژه تسک‌پلاس را اول از همه دریافت کن</p>
+        <form onsubmit="submitNewsletter(event)">
+          <div class="form-group">
+            <input type="text" class="form-input" placeholder="نام و نام خانوادگی" required />
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-input" placeholder="آدرس ایمیل" required dir="ltr" style="text-align:left;" />
+          </div>
+          <button type="submit" class="btn-primary form-submit shine-effect" style="padding:0.875rem;font-size:0.95rem;">
+            عضویت در خبرنامه
+            <i class="fa-solid fa-paper-plane" style="margin-right:0.5rem;"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== فوتر ===== -->
+<footer>
+  <div style="max-width:1280px;margin:0 auto;">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="logo-icon-nav" style="width:36px;height:36px;font-size:0.9rem;"><i class="fa-solid fa-check-double"></i></div>
+          <span class="fi">تسک‌پلاس</span>
+          <span class="en">| TaskPlus</span>
+        </div>
+        <p>اپلیکیشن هوشمند مدیریت وظایف که کارهایت را اولویت‌بندی می‌کند و بهره‌وری‌ات را چند برابر می‌کند.</p>
+        <div class="social-links">
+          <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-telegram"></i></a>
+          <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>محصول</h4>
+        <ul>
+          <li><a href="#features" onclick="scrollToSection('features');return false;">امکانات</a></li>
+          <li><a href="#pricing" onclick="scrollToSection('pricing');return false;">قیمت‌گذاری</a></li>
+          <li><a href="#download" onclick="scrollToSection('download');return false;">دانلود</a></li>
+          <li><a href="#priority-demo" onclick="scrollToSection('priority-demo');return false;">دمو</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>شرکت</h4>
+        <ul>
+          <li><a href="#" target="_blank" rel="noopener">درباره ما</a></li>
+          <li><a href="#" target="_blank" rel="noopener">وبلاگ</a></li>
+          <li><a href="#" target="_blank" rel="noopener">فرصت‌های شغلی</a></li>
+          <li><a href="#contact" onclick="scrollToSection('contact');return false;">تماس</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>پشتیبانی</h4>
+        <ul>
+          <li><a href="#faq" onclick="scrollToSection('faq');return false;">سوالات متداول</a></li>
+          <li><a href="#" target="_blank" rel="noopener">مستندات</a></li>
+          <li><a href="#" target="_blank" rel="noopener">مرکز راهنما</a></li>
+          <li><a href="#" target="_blank" rel="noopener">وضعیت سرورها</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>قانونی</h4>
+        <ul>
+          <li><a href="#" target="_blank" rel="noopener">حریم خصوصی</a></li>
+          <li><a href="#" target="_blank" rel="noopener">شرایط استفاده</a></li>
+          <li><a href="#" target="_blank" rel="noopener">امنیت</a></li>
+          <li><a href="#" target="_blank" rel="noopener">کوکی‌ها</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© ۱۴۰۴ تسک‌پلاس | TaskPlus - تمامی حقوق محفوظ است</div>
+      <div class="footer-social-links">
+        <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- دکمه بازگشت به بالا -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'});" title="بازگشت به بالا">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<!-- توست نوتیفیکیشن -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== ابزارهای کمکی =====
+function toPersian(num) {
+  const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  return String(num).replace(/\d/g, d => persianDigits[d]);
+}
+function showToast(msg, color='#22c55e') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = color; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+// ===== پریلودر =====
+(function() {
+  let pct = 0;
+  const bar = document.getElementById('preloaderBar');
+  const pctEl = document.getElementById('preloaderPct');
+  const iv = setInterval(() => {
+    pct += Math.random() * 15 + 5;
+    if(pct >= 100) { pct = 100; clearInterval(iv); finishPreloader(); }
+    bar.style.width = pct + '%';
+    pctEl.textContent = toPersian(Math.floor(pct)) + '٪';
+  }, 120);
+  function finishPreloader() {
+    setTimeout(() => {
+      document.getElementById('preloader').classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 400);
+  }
+  document.body.style.overflow = 'hidden';
+})();
+
+// ===== ذرات =====
+(function() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let W, H, animId;
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  const colors = ['rgba(13,148,136,0.5)','rgba(6,182,212,0.5)','rgba(20,184,166,0.4)','rgba(245,158,11,0.3)'];
+  for(let i=0;i<60;i++) particles.push({
+    x: Math.random()*W, y: Math.random()*H,
+    r: Math.random()*3+1, vx: (Math.random()-0.5)*0.5,
+    vy: (Math.random()-0.5)*0.5, c: colors[Math.floor(Math.random()*colors.length)],
+    o: Math.random()*0.5+0.2
+  });
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.c; ctx.fill();
+    });
+    // خطوط بین ذرات
+    for(let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<100) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(13,148,136,${0.15*(1-d/100)})`;
+          ctx.lineWidth=0.8; ctx.stroke();
+        }
+      }
+    }
+    animId = requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===== تایپ‌رایتر =====
+(function() {
+  const words = ['افراد','تیم‌ها','سازمان‌ها'];
+  let wi=0, ci=0, deleting=false;
+  const el = document.getElementById('typewriterEl');
+  if(!el) return;
+  function type() {
+    const word = words[wi];
+    if(!deleting) {
+      el.textContent = word.slice(0, ci+1);
+      ci++;
+      if(ci===word.length) { deleting=true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = word.slice(0, ci-1);
+      ci--;
+      if(ci===0) { deleting=false; wi=(wi+1)%words.length; }
+    }
+    setTimeout(type, deleting ? 60 : 120);
+  }
+  setTimeout(type, 1000);
+})();
+
+// ===== ناوبری =====
+const navbar = document.getElementById('navbar');
+const heroEl = document.getElementById('hero');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY > 50;
+  navbar.classList.toggle('scrolled', scrolled);
+  navbar.classList.toggle('hero-mode', !scrolled);
+  // دکمه بالا رفتن
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 300);
+});
+
+function toggleMobileMenu() {
+  const btn = document.getElementById('navMenuBtn');
+  const menu = document.getElementById('mobileMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('navMenuBtn').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// ===== حالت تاریک/روشن =====
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  const icon = document.getElementById('themeIcon');
+  if(icon) { icon.className = dark ? 'fa-solid fa-moon' : 'fa-solid fa-sun'; }
+  localStorage.setItem('taskplus-theme', dark ? 'dark' : 'light');
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current !== 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('taskplus-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved ? saved === 'dark' : prefersDark);
+})();
+
+// ===== تب‌ها =====
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = document.getElementById('tab-' + name);
+  if(tab) tab.classList.add('active');
+}
+
+// ===== FAQ =====
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+// ===== تاگل صورتحساب =====
+let isAnnual = false;
+function toggleBilling() {
+  isAnnual = !isAnnual;
+  const sw = document.getElementById('billingSwitch');
+  sw.classList.toggle('annual', isAnnual);
+  document.getElementById('monthlyLabel').classList.toggle('active', !isAnnual);
+  document.getElementById('annualLabel').classList.toggle('active', isAnnual);
+  document.querySelectorAll('.price-monthly').forEach(el => el.classList.toggle('show', !isAnnual));
+  document.querySelectorAll('.price-annual').forEach(el => el.classList.toggle('show', isAnnual));
+}
+
+// ===== تایمر شمارش معکوس (۴۸ ساعت) =====
+(function() {
+  const storedEnd = localStorage.getItem('taskplus-countdown');
+  let endTime;
+  if(storedEnd) { endTime = parseInt(storedEnd); }
+  else { endTime = Date.now() + 48*60*60*1000; localStorage.setItem('taskplus-countdown', endTime); }
+  function update() {
+    const diff = Math.max(0, endTime - Date.now());
+    const days = Math.floor(diff / (24*3600000));
+    const hours = Math.floor((diff % (24*3600000)) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    const pad = n => toPersian(String(n).padStart(2,'0'));
+    const el = (id) => document.getElementById(id);
+    if(el('cdDays')) el('cdDays').textContent = pad(days);
+    if(el('cdHours')) el('cdHours').textContent = pad(hours);
+    if(el('cdMins')) el('cdMins').textContent = pad(mins);
+    if(el('cdSecs')) el('cdSecs').textContent = pad(secs);
+    if(diff > 0) setTimeout(update, 1000);
+  }
+  update();
+})();
+
+// ===== کانتر آمار =====
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const isDecimal = el.dataset.decimal === 'true';
+  const duration = 2000;
+  const steps = 60;
+  let count = 0;
+  const inc = target / steps;
+  const iv = setInterval(() => {
+    count += inc;
+    if(count >= target) { count = target; clearInterval(iv); }
+    let display;
+    if(isDecimal) { display = (count/10).toFixed(1); }
+    else { display = Math.floor(count).toLocaleString('fa-IR'); }
+    el.textContent = prefix + display + suffix;
+  }, duration/steps);
+}
+
+// ===== Intersection Observer =====
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // کانتر آمار
+      if(entry.target.closest('#stats') && entry.target.hasAttribute('data-target')) {
+        animateCounter(entry.target);
+      }
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal, .reveal-up').forEach(el => revealObserver.observe(el));
+// کانتر‌های آمار
+document.querySelectorAll('[data-target]').forEach(el => revealObserver.observe(el));
+
+// ===== 3D Tilt کارت‌ها =====
+document.querySelectorAll('.tilt-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    card.style.transform = `perspective(600px) rotateY(${x/r.width*12}deg) rotateX(${-y/r.height*12}deg) translateY(-6px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// ===== فرم خبرنامه =====
+function submitNewsletter(e) {
+  e.preventDefault();
+  showToast('✅ با موفقیت در خبرنامه عضو شدید!');
+  e.target.reset();
+}
+
+// ===== Parallax هیرو =====
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const orbs = document.querySelectorAll('.hero-gradient-orb');
+  orbs.forEach((orb, i) => {
+    orb.style.transform = `translateY(${scrollY * (0.1 + i*0.05)}px)`;
+  });
+});
+
+// ===== انیمیشن بارهای Progress در بخش اولویت =====
+const pdObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.querySelectorAll('.pd-bar-fill').forEach(bar => {
+        const w = bar.dataset.width || bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => bar.style.width = w, 200);
+      });
+      pdObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+const pdSection = document.getElementById('priorityCards');
+if(pdSection) pdObserver.observe(pdSection);
+
+// ===== انیمیشن ورود ذرات در صورت اسکرول =====
+// پریلودر بارهای موک‌آپ
+document.querySelectorAll('.task-progress-fill').forEach(bar => {
+  const w = bar.style.width;
+  bar.style.width = '0%';
+  setTimeout(() => bar.style.width = w, 1500);
+});
+
+// ===== بستن منوی موبایل با کلیک بیرون =====
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('navMenuBtn');
+  if(menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    closeMobileMenu();
+  }
+});
+</script>
+</body>
+</html>
